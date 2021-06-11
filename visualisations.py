@@ -100,27 +100,28 @@ plt.legend()
 def fd3(u, t, U0, w, nu, N, H, n, dt):
     h = H/N
     def v():
-        new_v = []
-        for i in range(N-1):
-            new_v.append(abs((u[i+1]-u[i])/h)**(n-1)) #maybe here switch to a symettric finite difference?? 
-        new_v.append(new_v[0])
+        new_v = [0]
+        for i in range(1, N-1):
+            new_v.append(abs((u[i+1]-u[i-1])/2*h)**(n-1)) #maybe here switch to a symettric finite difference?? 
+        new_v.append(0)
         return np.array(new_v)
     new_v = v()
     new_u = [-U0*w*np.sin(w*(t-dt)) if t>0 else 0]
     for i in range(1, N-1):
-        new_u.append(nu*(new_v[i]*(u[i+1]-2*u[i]+u[i-1])/h**2 + ((new_v[i+1]-new_v[i])/h)*(u[i+1]-u[i])/h))
+        new_u.append(nu*(new_v[i]*(u[i+1]-2*u[i]+u[i-1])/h**2 + ((new_v[i+1]-new_v[i-1])/2*h)*(u[i+1]-u[i-1])/2*h))
     new_u.append(-U0*w*np.sin(w*(t-dt)) if t>0 else 0)
     return np.array(new_u)
 
 nu = 1
 H = 10
 N = 200
-w = 1
+w = 2
+U0=3
 t_array = np.linspace(0, 10, num=1000)
 dt = t_array[1] - t_array[0]
 y_array = np.linspace(0, H, num=N)
 init_s = old_b_sol(y_array, 0, U0, w, mu, rho, tau, G, H)
-pow_s = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.5, dt))
+pow_s = odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.2, dt))
 old = [old_b_sol(y_array, t, U0, w, mu, rho, tau, G, H) for t in t_array]
 
 ax, (old_ax, pow_ax) = plt.subplots(1,2)
