@@ -51,7 +51,7 @@ rho = 1
 tau = 5
 G = 5
 y_array = np.linspace(0, H, num=N)
-t_array = np.arange(0, 10, 2)
+t_array = np.arange(0, 11, 2)
 newt = [u(y_array, t, u0=U0, omega=w, nu=mu/rho, H=H) for t in t_array]#[newt_sol(y_array, t, U0, w, mu/rho, H) for t in t_array]
 old = [old_b_sol(y_array, t, U0, w, mu, rho, tau, G, H) for t in t_array]
 
@@ -64,7 +64,7 @@ newt_ax.plot(newt[1], y_array, label="t=2")
 newt_ax.plot(newt[2], y_array, label="t=4")
 newt_ax.plot(newt[3], y_array, label="t=6")
 newt_ax.plot(newt[4], y_array, label="t=8")
-#newt_ax.plot(newt[5], y_array, label="t=10")
+newt_ax.plot(newt[5], y_array, label="t=10")
 
 old_ax.set_xlabel('u, velocity of fluid')
 old_ax.set_ylabel('y')
@@ -74,28 +74,28 @@ old_ax.plot(old[1], y_array, label="t=2")
 old_ax.plot(old[2], y_array, label="t=4")
 old_ax.plot(old[3], y_array, label="t=6")
 old_ax.plot(old[4], y_array, label="t=8")
-#old_ax.plot(old[5], y_array, label="t=10")
+old_ax.plot(old[5], y_array, label="t=10")
 plt.legend()
 #plt.show()
-#plt.savefig('old_vs_newt.pgf')
+plt.savefig('old_vs_newt.pgf')
 
-#H_array = np.linspace(1, 50, 5)
-#old = []
-#for h in H_array:
-#    y_array = (np.linspace(0, h, num=N))
-#    old.append(old_b_sol(y_array, 8, U0, w, mu, rho, tau, G, h))
-#y_array = np.linspace(0, 10, num=N)
-#fig, ax = plt.subplots()
-#ax.set_xlabel('u, velocity of fluid')
-#ax.set_ylabel('y')
-#ax.set_title('Oldroyd b fluid at differing heights')
-#ax.plot(old[0], y_array, label="h=1")
-#ax.plot(old[1], y_array, label=f"h={H_array[1]}")
-#ax.plot(old[2], y_array, label=f"h={H_array[2]}")
-#ax.plot(old[3], y_array, label=f"h={H_array[3]}")
-#ax.plot(old[4], y_array, label=f"h={H_array[4]}")
-#plt.legend()
-#plt.savefig('old_at_heights.pgf')
+H_array = np.linspace(1, 50, 5)
+old = []
+for h in H_array:
+    y_array = (np.linspace(0, h, num=N))
+    old.append(old_b_sol(y_array, 8, U0, w, mu, rho, tau, G, h))
+y_array = np.linspace(0, 10, num=N)
+fig, ax = plt.subplots()
+ax.set_xlabel('u, velocity of fluid')
+ax.set_ylabel('y')
+ax.set_title('Oldroyd b fluid at differing heights')
+ax.plot(old[0], y_array, label="h=1")
+ax.plot(old[1], y_array, label=f"h={H_array[1]}")
+ax.plot(old[2], y_array, label=f"h={H_array[2]}")
+ax.plot(old[3], y_array, label=f"h={H_array[3]}")
+ax.plot(old[4], y_array, label=f"h={H_array[4]}")
+plt.legend()
+plt.savefig('old_at_heights.pgf')
 
 def fd3(u, t, U0, w, nu, N, H, n, dt):
     h = H/N
@@ -141,4 +141,4 @@ pow_ax.plot(pow_s[599], y_array, label="t=6")
 pow_ax.plot(pow_s[799], y_array, label="t=8")
 pow_ax.plot(pow_s[999], y_array, label="t=10")
 plt.legend()
-plt.show()
+plt.savefig('old_vs_pow.pgf')

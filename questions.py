@@ -4,14 +4,15 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 from scipy.integrate import odeint
-matplotlib.use("pgf")
-matplotlib.rcParams['axes.unicode_minus'] = False
-matplotlib.rcParams.update({
-    "pgf.texsystem": "pdflatex",
-    'font.family': 'serif',
-    'text.usetex': True,
-    'pgf.rcfonts': False,
-})
+if True:
+    matplotlib.use("pgf")
+    matplotlib.rcParams['axes.unicode_minus'] = False
+    matplotlib.rcParams.update({
+        "pgf.texsystem": "pdflatex",
+        'font.family': 'serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+    })
 def fd2(u, t, U0, w, nu, N, H):
     h = H/N
     new_u = [-U0*w*np.sin(w*t)]
@@ -107,7 +108,7 @@ newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
 
 #now see the effect of changing n
 H=5
-n_array = np.array([1,1.2,1.4])
+n_array = np.array([0.8,0.9,1.0])
 t_array = np.arange(0, 1, 0.01)
 ns = np.array([odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, n, dt)) for n in n_array])
 
@@ -138,4 +139,4 @@ n3.plot(ns[2, 79], y_array, label=f"t={t_array[79]}")
 n3.plot(ns[2, 99], y_array, label=f"t={t_array[99]}")
 
 plt.legend()
-plt.savefig('different_n.pgf')
+plt.savefig('different_n_lessthan0.pgf')
