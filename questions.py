@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 from scipy.integrate import odeint
-if True:
+if False:
     matplotlib.use("pgf")
     matplotlib.rcParams['axes.unicode_minus'] = False
     matplotlib.rcParams.update({
@@ -81,7 +81,7 @@ def fd3(u, t, U0, w, nu, N, H, n, dt):
 nu = 1
 H = 1
 N = 200
-w = 1
+w = 2
 t_array = np.linspace(0, 3, num=300)
 dt = t_array[1] - t_array[0]
 y_array = np.linspace(0, H, num=N)
@@ -108,35 +108,86 @@ newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
 
 #now see the effect of changing n
 H=5
-n_array = np.array([0.8,0.9,1.0])
-t_array = np.arange(0, 1, 0.01)
-ns = np.array([odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, n, dt)) for n in n_array])
+w=2
+nu=3
+n_array = np.array([1.4])
+t_array = np.arange(0, 10, 0.01)
+ns = np.array(odeint(fd3, init_s, t_array, args=(U0, w, nu, N, H, 1.2, dt)))
 
-fig, (n1, n2, n3) = plt.subplots(1, 3)
-n1.set(xlabel='u', ylabel='y')
-n2.set(xlabel='u', ylabel='y')
-n3.set(xlabel='u', ylabel='y')
+#fig, (n1, n2, n3) = plt.subplots(1, 3)
+#n1.set(xlabel='u', ylabel='y')
+#n2.set(xlabel='u', ylabel='y')
+#n3.set(xlabel='u', ylabel='y')
 
-n1.plot(ns[0, 0], y_array, label="t=0")
-n1.plot(ns[0, 19], y_array, label=f"t={t_array[19]}")
-n1.plot(ns[0, 39], y_array, label=f"t={t_array[39]}")
-n1.plot(ns[0, 59], y_array, label=f"t={t_array[59]}")
-n1.plot(ns[0, 79], y_array, label=f"t={t_array[79]}")
-n1.plot(ns[0, 99], y_array, label=f"t={t_array[99]}")
+#n1.plot(ns[0, 0], y_array, label="t=0")
+#n1.plot(ns[0, 19], y_array, label=f"t={t_array[19]}")
+#n1.plot(ns[0, 39], y_array, label=f"t={t_array[39]}")
+#n1.plot(ns[0, 59], y_array, label=f"t={t_array[59]}")
+#n1.plot(ns[0, 79], y_array, label=f"t={t_array[79]}")
+#n1.plot(ns[0, 99], y_array, label=f"t={t_array[99]}")
 
-n2.plot(ns[1, 0], y_array, label="t=0")
-n2.plot(ns[1, 19], y_array, label=f"t={t_array[19]}")
-n2.plot(ns[1, 39], y_array, label=f"t={t_array[39]}")
-n2.plot(ns[1, 59], y_array, label=f"t={t_array[59]}")
-n2.plot(ns[1, 79], y_array, label=f"t={t_array[79]}")
-n2.plot(ns[1, 99], y_array, label=f"t={t_array[99]}")
+#n2.plot(ns[1, 0], y_array, label="t=0")
+#n2.plot(ns[1, 19], y_array, label=f"t={t_array[19]}")
+#n2.plot(ns[1, 39], y_array, label=f"t={t_array[39]}")
+#n2.plot(ns[1, 59], y_array, label=f"t={t_array[59]}")
+#n2.plot(ns[1, 79], y_array, label=f"t={t_array[79]}")
+#n2.plot(ns[1, 99], y_array, label=f"t={t_array[99]}")
 
-n3.plot(ns[2, 0], y_array, label="t=0")
-n3.plot(ns[2, 19], y_array, label=f"t={t_array[19]}")
-n3.plot(ns[2, 39], y_array, label=f"t={t_array[39]}")
-n3.plot(ns[2, 59], y_array, label=f"t={t_array[59]}")
-n3.plot(ns[2, 79], y_array, label=f"t={t_array[79]}")
-n3.plot(ns[2, 99], y_array, label=f"t={t_array[99]}")
+#n3.plot(ns[2, 0], y_array, label="t=0")
+#n3.plot(ns[2, 19], y_array, label=f"t={t_array[19]}")
+#n3.plot(ns[2, 39], y_array, label=f"t={t_array[39]}")
+#n3.plot(ns[2, 59], y_array, label=f"t={t_array[59]}")
+#n3.plot(ns[2, 79], y_array, label=f"t={t_array[79]}")
+#n3.plot(ns[2, 99], y_array, label=f"t={t_array[99]}")
 
-plt.legend()
-plt.savefig('different_n_lessthan0.pgf')
+#plt.legend()
+#plt.savefig('different_n_lessthan0.pgf')
+
+def sigma(u, h, mu, n):
+    N = len(u)
+    dudy = np.array([0]+ [(u[i+1] - u[i-1])/(2*h) for i in range(1, N-1)] + [0])
+    return mu*pow(dudy,n)
+
+h = y_array[1] - y_array[0]
+n = 1.4
+newt_sol = np.array([a_sol(y_array, t, U0, w, nu, H) for t in t_array])
+
+sigma_t = np.array([sigma(ns[i], h, 1, n) for i in range(len(t_array))])
+sigma_t_newt = np.array([sigma(newt_sol[i], h, 1, 1) for i in range(len(t_array))])
+
+#fig, ax = plt.subplots(1,1)
+#ax.set(xlabel=r'$\sigma_{12}$', ylabel='y', title='The stress on a power law fluid at various times')
+#for ti in [0, 99, 199, 299]:
+#    ax.plot(sigma_t[ti], y_array, label=f't={t_array[ti]}')
+#plt.legend()
+#plt.show()
+
+T, Y = np.meshgrid(t_array, y_array)
+fig, (newt_ax, pow_ax) = plt.subplots(1, 2)
+pow_ax.set(xlabel='t', ylabel='y', title='Power law')
+im = pow_ax.pcolor(T, Y, abs(sigma_t.T), shading='auto', cmap='hot', rasterized=True)
+cbar = fig.colorbar(im, ax=pow_ax)
+cbar.set_label(r'$\sigma_{12}$')
+
+newt_ax.set(xlabel='t', ylabel='y', title='Newtonian')
+im = newt_ax.pcolor(T, Y, abs(sigma_t_newt.T), shading='auto', cmap='hot', rasterized=True)
+cbar = fig.colorbar(im, ax=newt_ax)
+cbar.set_label(r'$\sigma_{12}$')
+fig.tight_layout()
+#plt.savefig('heatmap_sigma_powervsnewt.pgf')
+
+def eff(u, h, mu, n):
+    N = len(u)
+    dudy = np.array([0]+ [(u[i+1] - u[i-1])/(2*h) for i in range(1, N-1)] + [0])
+    return mu*pow(abs(dudy), n-1)
+
+mu_eff = np.array([eff(ns[i], h, 1, n) for i in range(len(t_array))])
+fig, pow_ax = plt.subplots()
+pow_ax.set(xlabel='t', ylabel='y', title='Power law')
+im = pow_ax.pcolor(T, Y, mu_eff.T, shading='auto', cmap='hot', rasterized=True)
+cbar = fig.colorbar(im, ax=pow_ax)
+cbar.set_label(r'$\nu_{eff}$')
+
+
+#plt.savefig('heatmap_nu_powervsnewt.pgf')
+plt.show()
