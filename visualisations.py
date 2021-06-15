@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 from scipy.integrate import odeint
 
-pgf = False
+pgf = True
 if pgf:
     matplotlib.use("pgf")
     matplotlib.rcParams['axes.unicode_minus'] = False
@@ -48,8 +48,8 @@ U0 = 4
 w = 1
 mu = 1
 rho = 1
-tau = 5
-G = 5
+tau = 0.5
+G = 1
 y_array = np.linspace(0, H, num=N)
 t_array = np.arange(0, 11, 2)
 newt = [u(y_array, t, u0=U0, omega=w, nu=mu/rho, H=H) for t in t_array]#[newt_sol(y_array, t, U0, w, mu/rho, H) for t in t_array]
@@ -112,12 +112,12 @@ def fd3(u, t, U0, w, nu, N, H, n, dt):
     new_u.append(-U0*w*np.sin(w*(t-dt)) if t>0 else 0)
     return np.array(new_u)
 
-nu = 1
-H = 10
+nu = 1.2
+H = 5
 N = 200
-w = 2
+w = 1
 U0=3
-t_array = np.linspace(0, 10, num=1000)
+t_array = np.arange(0, 5.01, 0.01)
 dt = t_array[1] - t_array[0]
 y_array = np.linspace(0, H, num=N)
 init_s = old_b_sol(y_array, 0, U0, w, mu, rho, tau, G, H)
@@ -128,17 +128,17 @@ ax, (old_ax, pow_ax) = plt.subplots(1,2)
 old_ax.set(xlabel='u', ylabel='y', title='Oldroy-B')
 pow_ax.set(xlabel='u', ylabel='y', title='Power law fluid')
 old_ax.plot(old[0], y_array, label="t=0")
-old_ax.plot(old[199], y_array, label="t=2")
-old_ax.plot(old[399], y_array, label="t=4")
-old_ax.plot(old[599], y_array, label="t=6")
-old_ax.plot(old[799], y_array, label="t=8")
-old_ax.plot(old[999], y_array, label="t=10")
+old_ax.plot(old[100], y_array, label="t=1")
+old_ax.plot(old[200], y_array, label="t=2")
+old_ax.plot(old[300], y_array, label="t=3")
+old_ax.plot(old[400], y_array, label="t=4")
+old_ax.plot(old[500], y_array, label="t=5")
 
 pow_ax.plot(pow_s[0], y_array, label="t=0")
-pow_ax.plot(pow_s[199], y_array, label="t=2")
-pow_ax.plot(pow_s[399], y_array, label="t=4")
-pow_ax.plot(pow_s[599], y_array, label="t=6")
-pow_ax.plot(pow_s[799], y_array, label="t=8")
-pow_ax.plot(pow_s[999], y_array, label="t=10")
+pow_ax.plot(pow_s[100], y_array, label="t=1")
+pow_ax.plot(pow_s[200], y_array, label="t=2")
+pow_ax.plot(pow_s[300], y_array, label="t=3")
+pow_ax.plot(pow_s[400], y_array, label="t=4")
+pow_ax.plot(pow_s[500], y_array, label="t=5")
 plt.legend()
 plt.savefig('old_vs_pow.pgf')

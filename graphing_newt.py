@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-pgf = False
+pgf = True
 if pgf:
     matplotlib.use("pgf")
     matplotlib.rcParams['axes.unicode_minus'] = False
@@ -21,5 +21,11 @@ def a_sol(y, t, U0, w, nu, H):
 
 t_array = np.arange(1,6,1)
 y_array = np.linspace(0, 10)
-sol = [a_sol(y_array, t, 1, 1, 1, 10) for t in t_array]
+sol = [a_sol(y_array, t, 1, 1, 1.2, 10) for t in t_array]
 
+fig, ax = plt.subplots()
+ax.set(xlabel=r'$u$', ylabel=r'$y$', title=r'Velocity field at time $t$')
+for t in [0,1,2,3,4]:
+    ax.plot(sol[t], y_array, label=f'time={t}')
+plt.legend()
+plt.savefig('newt_visualisation.pgf')
